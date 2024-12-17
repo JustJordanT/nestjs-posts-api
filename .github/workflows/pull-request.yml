@@ -1,0 +1,49 @@
+name: NestJS Tests
+
+on:
+  # Trigger the workflow on push and pull request events
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    # Run on the latest Ubuntu
+    runs-on: ubuntu-latest
+
+    # Use Node.js strategy to test on multiple versions
+    strategy:
+      matrix:
+        node-version: [ 16.x, 18.x, 20.x ]
+
+    steps:
+      # Checkout the repository code
+      - uses: actions/checkout@v4
+
+      # Setup Node.js with the matrix version
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      # Install dependencies using Yarn
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      # Run linting (optional, but recommended)
+      - name: Lint
+        run: yarn lint
+
+      # Run unit tests
+      - name: Run Unit Tests
+        run: yarn test
+
+#      # Run end-to-end tests (if applicable)
+#      - name: Run E2E Tests
+#        run: yarn test:e2e
+#
+#      # Optionally run test coverage
+#      - name: Test Coverage
+#        run: yarn test:cov
