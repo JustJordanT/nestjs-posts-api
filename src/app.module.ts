@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from 'src/users/users.module';
 import { PostsModule } from './posts/post.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://jordantay9014:iIh24KWB5ArRcWeB@cluster0.majhe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-    ),
+    ConfigModule.forRoot({
+      envFilePath: '.env.development',
+    }),
+    MongooseModule.forRoot(`${process.env.MONGO_CONNECTION_STRING}`),
     UsersModule,
     PostsModule,
   ],
